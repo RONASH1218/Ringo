@@ -1,67 +1,89 @@
 #include <stdio.h>
 #include <conio.h>
+#include<math.h>
 
-// Function to perform binary addition
+void dectobinary(int nbit,int num,int arry[])
+{
+	while(nbit>=0){
+		if(num>0){
+			arry[nbit-1]=num%2;
+			num=num/2;
+			nbit--;
+		}
+		else{
+			arry[nbit-1]=0;
+			nbit--;
+		}
+	}
+}
+
+int num(int arry[], int nbit){
+	int i,a=0;
+	for(i=0;i<nbit;i++){
+		a=a*10+arry[i];
+	}
+	return a;
+}
 int binaryAddition(int a, int b) {
     int carry = 0, result = 0, bit = 1;
     while (a != 0 || b != 0) {
         int bit_a = a % 10;
         int bit_b = b % 10;
 
-        // Add the bits along with the carry
+       
         int sum = bit_a + bit_b + carry;
 
-        // Update the result
+        
         result += (sum % 2) * bit;
 
-        // Calculate the carry for the next bit
+        
         carry = sum / 2;
 
-        // Move to the next bit
+        
         a /= 10;
         b /= 10;
         bit *= 10;
     }
 
-    // Add the carry if exists
+    
     result += carry * bit;
     return result;
 }
 
-// Function to perform logical shift left
+
 int logicalShiftLeft(int num) {
-    return num * 10; // Equivalent to shifting left by 1 position
+    return num * 10; 
 }
 
-// Function to perform logical shift right
+
 int logicalShiftRight(int num) {
-    return num / 10; // Equivalent to shifting right by 1 position
+    return num / 10; 
 }
 
-// Function to perform Booth's multiplication algorithm
+
 int boothMultiply(int multiplicand, int multiplier) {
     int accumulator = 0;
     int bitMask = 1;
 
-    // Iterate over each bit of the multiplier
+    
     while (multiplier != 0) {
-        // Step 2: Test Y0; if it is 1, add content of X to the accumulator A
+        
         if (multiplier % 10 == 1) {
             accumulator = binaryAddition(accumulator, multiplicand);
         }
 
-        // Step 3: Logical Shift the content of X left one position and content of Y right one position
+        
         multiplicand = logicalShiftLeft(multiplicand);
         multiplier = logicalShiftRight(multiplier);
 
-        // Move the bit mask to the next bit
+        
         bitMask *= 10;
     }
 
     return accumulator;
 }
 
-// Function to convert binary number to decimal
+
 int binaryToDecimal(int binary) {
     int decimal = 0, base = 1;
     while (binary != 0) {
@@ -74,13 +96,31 @@ int binaryToDecimal(int binary) {
 }
 
 int main() {
-    int multiplicand, multiplier;
-    printf("Enter the multiplicand (binary): ");
-    scanf("%d", &multiplicand);
-    printf("Enter the multiplier (binary): ");
-    scanf("%d", &multiplier);
+    int num1,num2,arry1[10],arry2[10],sum[10],nbit, multiplicand, multiplier;
+    printf("enter the number of bits:");
+    scanf("%d", &nbit);
+    printf("Enter the multiplicand: ");
+    scanf("%d", &num1);
+    
+    printf("Enter the multiplier: ");
+    scanf("%d", &num2);
+    
+    	if(num1<0){
+		dectobinary(nbit,abs(num1),arry1);
+	}
+	else{
+		dectobinary(nbit,num1,arry1);
+	}
+	
+	if(num2<0){
+		dectobinary(nbit,abs(num2),arry2);
+	}
+	else{
+		dectobinary(nbit,num2,arry2);
+	}
 
-    // Step 1: Clear the accumulator (sum)
+  	multiplicand= num(arry1,nbit);
+  	multiplier = num(arry2,nbit);
     int product = boothMultiply(multiplicand, multiplier);
 
     printf("Product of the two binary numbers: %d (binary)\n", product);
@@ -89,4 +129,3 @@ int main() {
     getch();
     return 0;
 }
-
